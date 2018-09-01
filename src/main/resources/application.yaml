@@ -1,0 +1,5 @@
+amap:
+  restapi:
+    url:
+      geocodeGeo: https://restapi.amap.com/v3/geocode/geo
+      geocodeRegeo: https://restapi.amap.com/v3/geocode/regeo
