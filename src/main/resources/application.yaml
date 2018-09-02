@@ -3,3 +3,8 @@ amap:
     url:
       geocodeGeo: https://restapi.amap.com/v3/geocode/geo
       geocodeRegeo: https://restapi.amap.com/v3/geocode/regeo
+      searchKeyword: https://restapi.amap.com/v3/place/text
+      searchAround: https://restapi.amap.com/v3/place/around
+      searchPolygon: https://restapi.amap.com/v3/place/polygon
+      searchDetail: https://restapi.amap.com/v3/place/detail
+

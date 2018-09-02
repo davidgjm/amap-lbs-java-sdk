@@ -20,50 +20,16 @@ import java.util.Map;
 @Slf4j
 @Service
 public class AmapGeoCodeServiceImpl implements AmapGeoCodeService {
-    private final AmapSettings amapSettings;
     private final AmapRestUrls restUrls;
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private final AmapWSApiService wsApiService;
 
-    public AmapGeoCodeServiceImpl(AmapSettings amapSettings, AmapRestUrls restUrls, RestTemplate restTemplate, ObjectMapper objectMapper) {
-        this.amapSettings = amapSettings;
+    public AmapGeoCodeServiceImpl(AmapRestUrls restUrls, AmapWSApiService wsApiService) {
         this.restUrls = restUrls;
-        this.restTemplate = restTemplate;
-        this.objectMapper = objectMapper;
-    }
-
-    private <Q extends WSRequest> UriComponentsBuilder buildGetBuilder(String url, Q request) {
-        Map<String, Object> params = objectMapper.convertValue(request, Map.class);
-
-
-        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(url)
-                .queryParam("key", amapSettings.getApikey());
-        params.forEach(uriComponentsBuilder::queryParam);
-
-        return uriComponentsBuilder;
-    }
-
-    private <Q extends WSRequest, R extends WSResponse> R submitGetRequest(String url, Q request, Class<R> responseType) {
-        UriComponentsBuilder uriComponentsBuilder = buildGetBuilder(url, request);
-        ResponseEntity<String> responseEntity=restTemplate.getForEntity(uriComponentsBuilder.build().encode().toUri(), String.class );
-
-        HttpStatus status = responseEntity.getStatusCode();
-        String responseBody = responseEntity.getBody();
-        log.debug("response status: {}", status);
-        log.debug("response details: {}", responseBody);
-        R response = null;
-        try {
-            response = objectMapper.readValue(responseBody, responseType);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
-        log.info("Response info code: {}", response.getInfocode());
-        return response;
+        this.wsApiService = wsApiService;
     }
 
     @Override
     public GeoResponse getGeoCodeByAddress(GeoRequest request) {
-        return submitGetRequest(restUrls.getGeocodeGeo(), request, GeoResponse.class);
+        return wsApiService.doGet(restUrls.getGeocodeGeo(), request, GeoResponse.class,null);
     }
 }

@@ -10,5 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class AmapRestUrls {
     private String geocodeGeo;
     private String geocodeRegeo;
-
+    private String searchKeyword;
+    private String searchAround;
+    private String searchPolygon;
+    private String searchDetail;
 }
